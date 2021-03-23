@@ -6,7 +6,7 @@ var audio = document.getElementById("audioElement");
 
 // p5.js setup() function to set up the canvas for the web cam video stream
 function setup() {
-  //creating a canvas by giving the dimensions
+  //Setting the dimensions for canvas
   const canvas = createCanvas(500, 500);
   canvas.parent("video");
 
@@ -14,7 +14,7 @@ function setup() {
   videofeed.size(width, height);
   console.log("setup");
 
-  // setting up the poseNet model to feed in the video feed.
+  // Configuring postnet model for video feed
   posenet = ml5.poseNet(videofeed);
 
   posenet.on("pose", function (results) {
@@ -25,7 +25,7 @@ function setup() {
   noLoop();
 }
 
-// p5.js draw function() is called after the setup function
+// from p5.js draw function() is being called after the setup function
 function draw() {
   if (started) {
     image(videofeed, 0, 0, width, height);
@@ -33,7 +33,7 @@ function draw() {
   }
 }
 
-// toggle button for starting the video feed
+// Setting toggle button for start option of video feed
 function start() {
   select("#startstop").html("stop");
   document.getElementById("startstop").addEventListener("click", stop);
@@ -41,7 +41,7 @@ function start() {
   loop();
 }
 
-// toggle button for ending the video feed
+// Setting Toggle Button for stop
 function stop() {
   select("#startstop").html("start");
   document.getElementById("startstop").addEventListener("click", start);
@@ -50,13 +50,14 @@ function stop() {
   noLoop();
 }
 
-// defining the parameters used for the posenet : the tracking of the eyes
+// Defining the tracking of eye parameters for posenet
 var rightEye,
   leftEye,
   defaultRightEyePosition = [],
   defaultLeftEyePosition = [];
 
-//function to calculate the position of the various keypoints
+
+//Creating a function Using Posenet modules to calculate various keypoints
 function calEyes() {
   for (let i = 0; i < poses.length; i++) {
     let pose = poses[i].pose;
@@ -65,7 +66,7 @@ function calEyes() {
       rightEye = pose.keypoints[2].position;
       leftEye = pose.keypoints[1].position;
 
-      // keypoints are the points representing the different joints on the body recognized by posenet
+      // Setting condition for Keypoints recognized by posenet
 
       while (defaultRightEyePosition.length < 1) {
         defaultRightEyePosition.push(rightEye.y);
@@ -75,7 +76,8 @@ function calEyes() {
         defaultLeftEyePosition.push(leftEye.y);
       }
 
-      // if the current position of the body is too far from the original position blur function is called
+      
+      // Calling Blur function when there is deviation in body position
       if (Math.abs(rightEye.y - defaultRightEyePosition[0]) > 20) {
         blur();
       }
@@ -86,7 +88,7 @@ function calEyes() {
   }
 }
 
-//function to blur the background and add audio effect
+//Defining blur function and Adding Audio effect
 function blur() {
   document.body.style.filter = "blur(5px)";
   document.body.style.transition = "1s";
@@ -95,7 +97,7 @@ function blur() {
   audio.play();
 }
 
-//function to remove the blur effect
+//Defining removeblur function when the body comed back to initial position
 function removeblur() {
   document.body.style.filter = "blur(0px)";
   var audio = document.getElementById("audioElement");
